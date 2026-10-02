@@ -1,0 +1,82 @@
+{
+  "nombre_modelo": "Regresión logística",
+  "tipo_base": "simulada reproducible inspirada en OULAD",
+  "semilla": 42,
+  "ventana_observacion_dias": 30,
+  "definicion_objetivo": "abandono posterior al día 30",
+  "umbral_clasificacion": 0.5,
+  "variables_modelo": [
+    "modalidad",
+    "nivel_educativo_previo",
+    "edad",
+    "intentos_previos",
+    "creditos_matriculados",
+    "dias_anticipacion_registro",
+    "dias_activos_30",
+    "tareas_asignadas_30",
+    "tareas_entregadas_30",
+    "nota_promedio_30",
+    "solicito_soporte",
+    "clicks_por_dia_activo",
+    "tasa_entrega_30",
+    "tasa_actividad_30",
+    "log_clicks_30",
+    "sin_nota_30"
+  ],
+  "variables_categoricas": [
+    "modalidad",
+    "nivel_educativo_previo"
+  ],
+  "variables_numericas": [
+    "edad",
+    "intentos_previos",
+    "creditos_matriculados",
+    "dias_anticipacion_registro",
+    "dias_activos_30",
+    "tareas_asignadas_30",
+    "tareas_entregadas_30",
+    "nota_promedio_30",
+    "solicito_soporte",
+    "clicks_por_dia_activo",
+    "tasa_entrega_30",
+    "tasa_actividad_30",
+    "log_clicks_30",
+    "sin_nota_30"
+  ],
+  "opciones_categoricas": {
+    "modalidad": [
+      "Semipresencial",
+      "Virtual"
+    ],
+    "nivel_educativo_previo": [
+      "Bachillerato",
+      "Técnico",
+      "Universitario"
+    ]
+  },
+  "valores_referencia": {
+    "edad": 29.0,
+    "intentos_previos": 0.0,
+    "creditos_matriculados": 60.0,
+    "dias_anticipacion_registro": 34.5,
+    "dias_activos_30": 13.0,
+    "tareas_asignadas_30": 6.0,
+    "tareas_entregadas_30": 3.0,
+    "nota_promedio_30": 73.27067666874017,
+    "solicito_soporte": 0.0,
+    "clicks_por_dia_activo": 34.32666666666667,
+    "tasa_entrega_30": 0.5,
+    "tasa_actividad_30": 0.43333333333333335,
+    "log_clicks_30": 5.988961416889864,
+    "sin_nota_30": 0.0
+  },
+  "metricas_prueba": {
+    "modelo": "Regresión logística",
+    "accuracy": 0.695,
+    "precision": 0.5202312138728323,
+    "recall": 0.6976744186046512,
+    "f1": 0.5960264900662252,
+    "roc_auc": 0.7724477244772449
+  },
+  "limitacion": "Modelo académico entrenado con datos simulados; requiere validación externa antes de uso real."
+}

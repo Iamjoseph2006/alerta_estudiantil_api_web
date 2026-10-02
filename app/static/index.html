@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Interfaz de consulta para el modelo académico de alerta temprana estudiantil."
+    />
+    <title>Alerta académica | Consulta de riesgo</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+    <script src="/static/app.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Inicio">
+        <span class="brand-mark" aria-hidden="true">AE</span>
+        <span>
+          <strong>Alerta académica</strong>
+          <small>Modelo de minería de datos</small>
+        </span>
+      </a>
+      <div class="api-state" id="api-state" role="status" aria-live="polite">
+        <span class="state-dot" aria-hidden="true"></span>
+        <span>Comprobando API…</span>
+      </div>
+    </header>
+
+    <main class="page-shell">
+      <section class="intro" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">VENTANA DE OBSERVACIÓN · 30 DÍAS</p>
+          <h1 id="page-title">Consulta de riesgo de abandono</h1>
+          <p>Ingresa las señales académicas de los primeros 30 días y consulta la estimación.</p>
+        </div>
+      </section>
+
+      <div class="workspace-grid">
+        <section class="panel form-panel" aria-labelledby="form-title">
+          <div class="panel-heading">
+            <div>
+              <p class="step">01 · Datos de entrada</p>
+              <h2 id="form-title">Perfil del estudiante</h2>
+            </div>
+            <div class="examples" aria-label="Cargar datos de ejemplo">
+              <button type="button" class="text-button" id="example-low">
+                Ejemplo estable
+              </button>
+              <button type="button" class="text-button" id="example-high">
+                Ejemplo en alerta
+              </button>
+            </div>
+          </div>
+
+          <form id="prediction-form">
+            <fieldset>
+              <legend>Información general</legend>
+              <div class="fields-grid">
+                <label>
+                  Modalidad
+                  <select name="modalidad" required>
+                    <option value="Virtual">Virtual</option>
+                    <option value="Semipresencial">Semipresencial</option>
+                  </select>
+                </label>
+                <label>
+                  Nivel educativo previo
+                  <select name="nivel_educativo_previo" required>
+                    <option value="Bachillerato">Bachillerato</option>
+                    <option value="Técnico">Técnico</option>
+                    <option value="Universitario">Universitario</option>
+                  </select>
+                </label>
+                <label>
+                  Edad
+                  <input name="edad" type="number" min="18" max="54" value="29" required />
+                </label>
+                <label>
+                  Intentos previos
+                  <input name="intentos_previos" type="number" min="0" max="3" value="0" required />
+                </label>
+                <label>
+                  Créditos matriculados
+                  <select name="creditos_matriculados" required>
+                    <option value="30">30</option>
+                    <option value="60" selected>60</option>
+                    <option value="90">90</option>
+                    <option value="120">120</option>
+                  </select>
+                </label>
+                <label>
+                  Días de anticipación del registro
+                  <input name="dias_anticipacion_registro" type="number" min="-20" max="100" step="1" value="35" />
+                  <small>Dejar vacío si no consta.</small>
+                </label>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>Actividad de los primeros 30 días</legend>
+              <div class="fields-grid">
+                <label>
+                  Clics en el aula virtual
+                  <input name="clicks_30_dias" type="number" min="0" max="8676" value="398" required />
+                </label>
+                <label>
+                  Días activos
+                  <input name="dias_activos_30" type="number" min="0" max="30" value="13" required />
+                </label>
+                <label>
+                  Tareas asignadas
+                  <input name="tareas_asignadas_30" type="number" min="4" max="8" value="6" required />
+                </label>
+                <label>
+                  Tareas entregadas
+                  <input name="tareas_entregadas_30" type="number" min="0" max="8" value="3" required />
+                </label>
+                <label>
+                  Nota promedio
+                  <input name="nota_promedio_30" type="number" min="0" max="100" step="0.1" value="73.3" />
+                  <small>Dejar vacío si todavía no tiene nota.</small>
+                </label>
+                <label class="check-field">
+                  <input name="solicito_soporte" type="checkbox" />
+                  <span>
+                    Solicitó soporte
+                    <small>Académico o técnico durante el periodo.</small>
+                  </span>
+                </label>
+              </div>
+            </fieldset>
+
+            <div class="form-message" id="form-message" role="alert" hidden></div>
+            <button class="primary-button" id="submit-button" type="submit">
+              Calcular riesgo
+            </button>
+          </form>
+        </section>
+
+        <aside class="panel result-panel" aria-labelledby="result-title">
+          <div class="panel-heading">
+            <div>
+              <p class="step">02 · Resultado del modelo</p>
+              <h2 id="result-title">Estimación</h2>
+            </div>
+          </div>
+
+          <div class="empty-result" id="empty-result">
+            <p><strong>Resultado pendiente</strong><br />Completa los datos y selecciona “Calcular riesgo”.</p>
+          </div>
+
+          <div class="prediction-result" id="prediction-result" hidden aria-live="polite">
+            <p class="risk-label" id="risk-label">Probabilidad estimada</p>
+            <div class="risk-number"><span id="risk-number">0</span><small>%</small></div>
+            <div
+              class="risk-meter"
+              role="progressbar"
+              aria-label="Probabilidad estimada de abandono"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-valuenow="0"
+            >
+              <span id="risk-meter-fill"></span>
+              <i class="threshold-marker" title="Umbral del 50 %"></i>
+            </div>
+            <div class="result-status" id="result-status"></div>
+            <p class="recommendation" id="recommendation"></p>
+
+            <dl class="signals">
+              <div>
+                <dt>Tasa de entrega</dt>
+                <dd id="delivery-rate">—</dd>
+              </div>
+              <div>
+                <dt>Tasa de actividad</dt>
+                <dd id="activity-rate">—</dd>
+              </div>
+              <div>
+                <dt>Clics / día activo</dt>
+                <dd id="click-rate">—</dd>
+              </div>
+            </dl>
+
+            <p class="model-note" id="model-note"></p>
+          </div>
+
+          <div class="scope-note">
+            <strong>Uso responsable</strong>
+            <p>
+              Es un prototipo académico con datos simulados. La alerta sirve para
+              orientar apoyo humano, no para sancionar ni tomar decisiones automáticas.
+            </p>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <footer>
+      <span>Proyecto experimental · Minería de Datos</span>
+      <span>Regresión logística · umbral 0,50</span>
+    </footer>
+  </body>
+</html>
